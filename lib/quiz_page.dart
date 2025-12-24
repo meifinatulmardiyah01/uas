@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:tugas_uas/services/quiz_service.dart';
+import 'package:tugas_uas/quiz_result_page.dart';
 
 class QuizPage extends StatefulWidget {
   final String quizTitle;
@@ -49,10 +50,33 @@ class _QuizPageState extends State<QuizPage> {
   }
 
   void _finishQuiz() {
-    setState(() {
-      _isFinished = true;
-    });
     _timer.cancel();
+    
+    int score = _calculateScore();
+    int totalQuestions = QuizService.mockQuestions.length;
+    int correctCount = 0;
+    QuizService.mockQuestions.asMap().forEach((index, question) {
+      if (_selectedAnswers[index] != null && question.options[_selectedAnswers[index]!].isCorrect) {
+        correctCount++;
+      }
+    });
+    int wrongCount = totalQuestions - correctCount;
+    String timeTaken = _formatTime(10 * 60 - _secondsRemaining);
+
+    if (mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => QuizResultPage(
+            score: score,
+            correctCount: correctCount,
+            wrongCount: wrongCount,
+            timeTaken: timeTaken,
+            selectedAnswers: _selectedAnswers,
+          ),
+        ),
+      );
+    }
   }
 
   int _calculateScore() {
@@ -73,10 +97,6 @@ class _QuizPageState extends State<QuizPage> {
     const surfaceDark = Color(0xFF1A2230);
     const textWhite = Colors.white;
     const textGrey = Color(0xFF94A3B8);
-
-    if (_isFinished) {
-      return _buildResultView(primaryBlue, backgroundDark, surfaceDark, textWhite, textGrey);
-    }
 
     final questions = QuizService.mockQuestions;
     final currentQuestion = questions[_currentIndex];
