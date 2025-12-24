@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tugas_uas/profile_page.dart';
 import 'package:tugas_uas/register_page.dart';
+import 'package:tugas_uas/main_screen.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -138,7 +139,7 @@ class LoginPage extends StatelessWidget {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const ProfilePage()),
+                            builder: (context) => const MainScreen()),
                       );
                     },
                     style: ElevatedButton.styleFrom(

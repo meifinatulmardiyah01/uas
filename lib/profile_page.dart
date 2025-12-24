@@ -264,22 +264,7 @@ class ProfilePage extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: surfaceColor,
-        selectedItemColor: primaryColor,
-        unselectedItemColor: textMutedColor,
-        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 10),
-        unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 10),
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Beranda'),
-          BottomNavigationBarItem(icon: Icon(Icons.book), label: 'Kursus Saya'),
-          BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Pesan'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
-        ],
-        currentIndex: 3, // Set "Profil" as active
-        onTap: (index) {},
-      ),
+
     );
   }
 
