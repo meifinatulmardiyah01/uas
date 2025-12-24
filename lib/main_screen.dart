@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tugas_uas/home_page.dart';
+import 'package:tugas_uas/explore_page.dart';
+import 'package:tugas_uas/my_courses_page.dart';
 import 'package:tugas_uas/profile_page.dart';
 
 class MainScreen extends StatefulWidget {
@@ -12,12 +14,21 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = [
-    const HomePage(),
-    const Center(child: Text('Cari Page (Placeholder)')),
-    const Center(child: Text('Kursus Page (Placeholder)')),
-    const ProfilePage(),
-  ];
+  late final List<Widget> _pages;
+
+  @override
+  void initState() {
+    super.initState();
+    _pages = [
+      HomePage(
+        onSeeAll: () => _onItemTapped(1),
+        onSearchTap: () => _onItemTapped(1), // Link search to Explore
+      ),
+      const ExplorePage(),
+      const MyCoursesPage(),
+      const ProfilePage(),
+    ];
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -53,7 +64,7 @@ class _MainScreenState extends State<MainScreen> {
           onTap: _onItemTapped,
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Beranda'),
-            BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Cari'),
+            BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Jelajahi'),
             BottomNavigationBarItem(icon: Icon(Icons.book), label: 'Kursusku'),
             BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
           ],

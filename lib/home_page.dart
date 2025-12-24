@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  final VoidCallback? onSeeAll;
+  final VoidCallback? onSearchTap;
+  
+  const HomePage({super.key, this.onSeeAll, this.onSearchTap});
 
   @override
   Widget build(BuildContext context) {
@@ -128,39 +131,42 @@ class HomePage extends StatelessWidget {
               // Search Bar
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  decoration: BoxDecoration(
-                    color: surfaceColor,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.grey[200]!),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        blurRadius: 2,
-                        offset: const Offset(0, 1),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.search, color: Colors.grey[400]),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Text(
-                          'Cari kursus, mentor...',
-                          style: TextStyle(color: Colors.grey[400], fontSize: 14),
+                child: GestureDetector(
+                  onTap: onSearchTap,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: surfaceColor,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.grey[200]!),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 2,
+                          offset: const Offset(0, 1),
                         ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: primaryColor.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(8),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.search, color: Colors.grey[400]),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            'Cari kursus, mentor...',
+                            style: TextStyle(color: Colors.grey[400], fontSize: 14),
+                          ),
                         ),
-                        child: Icon(Icons.tune, color: primaryColor, size: 20),
-                      ),
-                    ],
+                        Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: primaryColor.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Icon(Icons.tune, color: primaryColor, size: 20),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -236,12 +242,15 @@ class HomePage extends StatelessWidget {
                         color: textMainColor,
                       ),
                     ),
-                    Text(
-                      'Lihat Semua',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: primaryColor,
+                    GestureDetector(
+                      onTap: onSeeAll,
+                      child: Text(
+                        'Lihat Semua',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: primaryColor,
+                        ),
                       ),
                     ),
                   ],

@@ -3,15 +3,24 @@ import 'package:tugas_uas/profile_page.dart';
 import 'package:tugas_uas/register_page.dart';
 import 'package:tugas_uas/main_screen.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  bool _obscurePassword = true;
 
   @override
   Widget build(BuildContext context) {
     final primaryColor = const Color(0xFF135BEC);
     final backgroundColor = const Color(0xFFF6F6F8);
     final textMainColor = const Color(0xFF111318);
-    final textMutedColor = const Color(0xFF4B5563); // Gray 600
+    final textMutedColor = const Color(0xFF4B5563);
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -24,7 +33,7 @@ class LoginPage extends StatelessWidget {
             backgroundColor: Colors.transparent,
             child: IconButton(
               icon: Icon(Icons.arrow_back, color: textMainColor),
-              onPressed: () {},
+              onPressed: () {}, // Can be updated if back navigation is needed
             ),
           ),
         ),
@@ -99,6 +108,7 @@ class LoginPage extends StatelessWidget {
                 _buildLabel('Email atau Nama Pengguna'),
                 const SizedBox(height: 8),
                 _buildInput(
+                  controller: _emailController,
                   hintText: 'Masukkan email Anda',
                   icon: Icons.mail_outline,
                 ),
@@ -106,9 +116,12 @@ class LoginPage extends StatelessWidget {
                 _buildLabel('Kata Sandi'),
                 const SizedBox(height: 8),
                 _buildInput(
+                  controller: _passwordController,
                   hintText: 'Masukkan kata sandi',
                   isPassword: true,
-                  suffixIcon: Icons.visibility_outlined,
+                  obscureText: _obscurePassword,
+                  onToggleVisibility: () => setState(() => _obscurePassword = !_obscurePassword),
+                  suffixIcon: Icons.visibility_outlined, // Fallback if isPassword logic uses this
                 ),
                 const SizedBox(height: 8),
                 Align(
@@ -135,13 +148,7 @@ class LoginPage extends StatelessWidget {
                   width: double.infinity,
                   height: 56,
                   child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const MainScreen()),
-                      );
-                    },
+                    onPressed: _handleLogin,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: primaryColor,
                       shape: RoundedRectangleBorder(
@@ -190,15 +197,15 @@ class LoginPage extends StatelessWidget {
                 Expanded(
                   child: _buildSocialButton(
                     label: 'Google',
-                    icon: Icons.g_mobiledata, // Fallback icon
-                    color: Colors.blue, // Just for fallback viz
+                    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDrxpnsboLmUDdSO1HxxojZtwMX-EL-IRbvkSIf0nCR0pMhLOju6uHbpZX3_0LUP0AupmGNKGP079OmCQwieagyELqP22jGmf5wioNfa050kpj1VgyYx4CEmZJ83oYjkwUyFIKjbSwhvjQGqKHlZxR4Ujpr7Jy3j5rQcdJHuwF-J9zQWDUatFnFDQz6NYLcwDnkbLwNHcIPmQvhm5HgDT7Jmm8_a3NsTD5WpFR9g_nr9OxngK9WvycK96L-UlqoxHHCY7curOJRSdat',
                   ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
                   child: _buildSocialButton(
                     label: 'Apple',
-                    icon: Icons.apple,
+                    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCtVQ1fuBqBoi9yQTAnX3FksPKEFwxSMqzEiEWdVH7vlvs655bQR7BwqCQ0DVGVNmY6D8k_4as5u2WVcalLlD9H6mporUnw8ePZGcvUDt0kkSQluxmtS2MdM92wmAASMf9T-nRn32ep35v2xV0Rnnb1GLfRYkfuJBjzjDfcgkjRYFvFMGCkcbThdYOMtWudn-OInJFbBXlDBR3tBZHa45IsPGZIu0u_fJAC5ZQDgfb0LHlxlscBL9b1UMEzvb0Tn0U7gJNoVoI2aACh',
+                    isInvert: true,
                   ),
                 ),
               ],
@@ -238,6 +245,33 @@ class LoginPage extends StatelessWidget {
     );
   }
 
+  // --- Backend Logic ---
+  void _handleLogin() {
+    final email = _emailController.text;
+    final password = _passwordController.text;
+
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Email dan kata sandi harus diisi')),
+      );
+      return;
+    }
+
+    // Simulate Auth Check
+    // if (email == "admin" && password == "admin") ...
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Login Berhasil!')),
+    );
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+          builder: (context) => const MainScreen()),
+    );
+  }
+  // --------------------
+
   Widget _buildLabel(String text) {
     return Text(
       text,
@@ -250,9 +284,12 @@ class LoginPage extends StatelessWidget {
   }
 
   Widget _buildInput({
+    required TextEditingController controller,
     required String hintText,
     IconData? icon,
     bool isPassword = false,
+    bool obscureText = false,
+    VoidCallback? onToggleVisibility,
     IconData? suffixIcon,
   }) {
     return Container(
@@ -269,26 +306,31 @@ class LoginPage extends StatelessWidget {
         ],
       ),
       child: TextField(
-        obscureText: isPassword,
+        controller: controller,
+        obscureText: obscureText,
         decoration: InputDecoration(
           hintText: hintText,
           hintStyle: TextStyle(color: Colors.grey[400]),
           border: InputBorder.none,
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          suffixIcon: suffixIcon != null
-              ? Icon(suffixIcon, color: Colors.grey[400])
-              : (icon != null ? Icon(icon, color: Colors.grey[400]) : null),
+          prefixIcon: icon != null ? Icon(icon, color: Colors.grey[400]) : null,
+          suffixIcon: isPassword
+              ? IconButton(
+                  icon: Icon(
+                    obscureText ? Icons.visibility_off : Icons.visibility,
+                    color: Colors.grey[400],
+                  ),
+                  onPressed: onToggleVisibility,
+                )
+              : null,
         ),
       ),
     );
   }
 
-  Widget _buildSocialButton({
-    required String label,
-    required IconData icon,
-    Color color = Colors.black,
-  }) {
+  Widget _buildSocialButton(
+      {required String label, required String imageUrl, bool isInvert = false}) {
     return Container(
       height: 48,
       decoration: BoxDecoration(
@@ -304,7 +346,12 @@ class LoginPage extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: color),
+              Image.network(imageUrl,
+                  height: 20,
+                  width: 20,
+                  color: isInvert && Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : null),
               const SizedBox(width: 8),
               Text(
                 label,
@@ -318,5 +365,12 @@ class LoginPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 }
