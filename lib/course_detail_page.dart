@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tugas_uas/course_learning_page.dart';
 
 class CourseDetailPage extends StatefulWidget {
   const CourseDetailPage({super.key});
@@ -406,7 +407,13 @@ class _CourseDetailPageState extends State<CourseDetailPage> with SingleTickerPr
                         child: SizedBox(
                           height: 50,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const CourseLearningPage()),
+                              );
+                            },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: primaryColor,
                               shape: RoundedRectangleBorder(

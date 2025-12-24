@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tugas_uas/explore_page.dart';
-import 'package:tugas_uas/course_detail_page.dart'; // Import to use Course model
+import 'package:tugas_uas/course_detail_page.dart';
+import 'package:tugas_uas/course_learning_page.dart';
+import 'package:tugas_uas/certificate_view_page.dart'; // Import to use Course model
 
 class MyCoursesPage extends StatefulWidget {
   const MyCoursesPage({super.key});
@@ -125,7 +127,7 @@ class _MyCoursesPageState extends State<MyCoursesPage> with SingleTickerProvider
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const CourseDetailPage()),
+                  MaterialPageRoute(builder: (context) => const CourseLearningPage()),
                 );
               },
               child: Column(
@@ -185,7 +187,13 @@ class _MyCoursesPageState extends State<MyCoursesPage> with SingleTickerProvider
                     ? SizedBox(
                         width: double.infinity,
                         child: OutlinedButton.icon(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const CertificateViewPage()),
+                            );
+                          },
                           icon: const Icon(Icons.download, size: 16),
                           label: const Text('Unduh Sertifikat'),
                           style: OutlinedButton.styleFrom(
