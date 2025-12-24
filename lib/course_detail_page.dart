@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tugas_uas/course_learning_page.dart';
+import 'package:tugas_uas/quiz_page.dart';
 
 class CourseDetailPage extends StatefulWidget {
   const CourseDetailPage({super.key});
@@ -595,8 +596,9 @@ class _CourseDetailPageState extends State<CourseDetailPage> with SingleTickerPr
           '1. Pengenalan UI/UX',
           '2 Video • 15 Menit',
           [
-            _buildLessonItem('Apa itu UI vs UX?', '08:30', isCompleted: true),
-            _buildLessonItem('Pola Pikir Desainer', '06:30', isLocked: false),
+            _buildLessonItem(context, 'Apa itu UI vs UX?', '08:30', isCompleted: true),
+            _buildLessonItem(context, 'Pola Pikir Desainer', '06:30', isLocked: false),
+            _buildLessonItem(context, 'Kuis Pengetahuan Dasar', '10 Soal', isLocked: false, type: 'Quiz'),
           ],
           surfaceColor,
           textMainColor,
@@ -652,39 +654,63 @@ class _CourseDetailPageState extends State<CourseDetailPage> with SingleTickerPr
     );
   }
 
-  Widget _buildLessonItem(String title, String duration, {bool isCompleted = false, bool isLocked = true}) {
+  Widget _buildLessonItem(BuildContext context, String title, String duration, {bool isCompleted = false, bool isLocked = true, String type = 'Video'}) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         border: Border(top: BorderSide(color: Colors.grey[100]!)),
       ),
-      child: Row(
-        children: [
-          Container(
-            width: 32, height: 32,
-            decoration: BoxDecoration(
-              color: isLocked ? Colors.grey[200] : const Color(0xFF135BEC).withOpacity(0.1),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(Icons.play_arrow, size: 16, color: isLocked ? Colors.grey : const Color(0xFF135BEC)),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: isLocked ? null : () {
+            if (type == 'Quiz') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => QuizPage(quizTitle: title)),
+              );
+            } else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CourseLearningPage()),
+              );
+            }
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Row(
               children: [
-                Text(title, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
-                Text(duration, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                Container(
+                  width: 32, height: 32,
+                  decoration: BoxDecoration(
+                    color: isLocked ? Colors.grey[200] : const Color(0xFF135BEC).withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    type == 'Quiz' ? Icons.quiz : Icons.play_arrow,
+                    size: 16, 
+                    color: isLocked ? Colors.grey : const Color(0xFF135BEC)
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(title, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
+                      Text(duration, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                    ],
+                  ),
+                ),
+                if (isCompleted)
+                   const Icon(Icons.check_circle, color: Colors.green, size: 20)
+                else if (isLocked && !isCompleted)
+                   const Icon(Icons.lock_outline, color: Colors.grey, size: 18)
+                else 
+                    const Icon(Icons.lock_open, color: Color(0xFF135BEC), size: 18),
               ],
             ),
           ),
-          if (isCompleted)
-             const Icon(Icons.check_circle, color: Colors.green, size: 20)
-          else if (isLocked && !isCompleted)
-             const Icon(Icons.lock_outline, color: Colors.grey, size: 18)
-          else 
-              const Icon(Icons.lock_open, color: Color(0xFF135BEC), size: 18),
-        ],
+        ),
       ),
     );
   }

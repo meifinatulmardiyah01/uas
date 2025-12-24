@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tugas_uas/services/course_service.dart';
+import 'package:tugas_uas/quiz_page.dart';
 
 class CourseLearningPage extends StatefulWidget {
   const CourseLearningPage({super.key});
@@ -366,7 +367,17 @@ class _CourseLearningPageState extends State<CourseLearningPage> {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(16),
-          onTap: lesson.isLocked ? null : () {},
+          onTap: lesson.isLocked
+            ? null
+            : () {
+                if (lesson.type == 'Quiz') {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => QuizPage(quizTitle: lesson.title)),
+                  );
+                }
+              },
           child: Padding(
             padding: const EdgeInsets.all(12),
             child: Row(
@@ -432,7 +443,23 @@ class _CourseLearningPageState extends State<CourseLearningPage> {
                 if (lesson.isLocked)
                   Icon(Icons.lock, color: textGrey, size: 18)
                 else if (lesson.isCompleted)
-                  const Icon(Icons.check_circle, color: Colors.green, size: 20),
+                  const Icon(Icons.check_circle, color: Colors.green, size: 20)
+                else if (lesson.type == 'Quiz')
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: primary,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Text(
+                      'MULAI',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),
