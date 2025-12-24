@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tugas_uas/course_detail_page.dart';
 
 class HomePage extends StatelessWidget {
   final VoidCallback? onSeeAll;
@@ -262,6 +263,7 @@ class HomePage extends StatelessWidget {
                 child: Row(
                   children: [
                     _buildCourseCard(
+                      context,
                       'Dasar UX Design',
                       'Modul 4/12',
                       0.75,
@@ -273,6 +275,7 @@ class HomePage extends StatelessWidget {
                     ),
                     const SizedBox(width: 16),
                     _buildCourseCard(
+                      context,
                       'Python untuk Data Science',
                       'Modul 2/10',
                       0.20,
@@ -354,6 +357,7 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildCourseCard(
+      BuildContext context,
       String title,
       String progressText,
       double progress,
@@ -363,8 +367,7 @@ class HomePage extends StatelessWidget {
       Color textColor,
       Color mutedColor) {
     return Container(
-      width: 280,
-      padding: const EdgeInsets.all(12),
+      width: 240, // Added width to match typical horizontal scroll card
       decoration: BoxDecoration(
         color: surfaceColor,
         borderRadius: BorderRadius.circular(16),
@@ -374,76 +377,91 @@ class HomePage extends StatelessWidget {
             color: Colors.black.withOpacity(0.05),
             blurRadius: 2,
             offset: const Offset(0, 1),
-          ),
+          )
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            height: 128,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              image: DecorationImage(
-                image: NetworkImage(imageUrl),
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: Center(
-              child: Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
-                  shape: BoxShape.circle,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const CourseDetailPage()),
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: 128,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    image: DecorationImage(
+                      image: NetworkImage(imageUrl),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  child: Center(
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.play_arrow_rounded,
+                          color: Colors.white, size: 24),
+                    ),
+                  ),
                 ),
-                child: const Icon(Icons.play_arrow_rounded,
-                    color: Colors.white, size: 24),
-              ),
-            ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: textColor,
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                progressText,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: mutedColor,
+                const SizedBox(height: 12),
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: textColor,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-              Text(
-                '${(progress * 100).toInt()}%',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: mutedColor,
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      progressText,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: mutedColor,
+                      ),
+                    ),
+                    Text(
+                      '${(progress * 100).toInt()}%',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: mutedColor,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(100),
-            child: LinearProgressIndicator(
-              value: progress,
-              backgroundColor: Colors.grey[100],
-              color: primaryColor,
-              minHeight: 8,
+                const SizedBox(height: 4),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(100),
+                  child: LinearProgressIndicator(
+                    value: progress,
+                    backgroundColor: Colors.grey[100],
+                    color: primaryColor,
+                    minHeight: 8,
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }

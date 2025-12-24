@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tugas_uas/course_detail_page.dart';
 
 class Course {
   final String title;
@@ -261,7 +262,7 @@ class _ExplorePageState extends State<ExplorePage> {
                      );
                   }
                   final course = _filteredCourses[index - 1];
-                  return _buildCourseCard(course, primaryColor, surfaceColor, textMainColor, textMutedColor);
+                  return _buildCourseCard(context, course, primaryColor, surfaceColor, textMainColor, textMutedColor);
                 },
               ),
             ),
@@ -304,7 +305,7 @@ class _ExplorePageState extends State<ExplorePage> {
     );
   }
 
-  Widget _buildCourseCard(Course course, Color primaryColor, Color surfaceColor,
+  Widget _buildCourseCard(BuildContext context, Course course, Color primaryColor, Color surfaceColor,
       Color textColor, Color mutedColor) {
     // Determine card type based on progress
     if (course.progress > 0) {
@@ -322,104 +323,116 @@ class _ExplorePageState extends State<ExplorePage> {
             )
           ],
         ),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: Row(
-                children: [
-                  Container(
-                    width: 80,
-                    height: 80,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      image: DecorationImage(
-                        image: NetworkImage(course.imageUrl),
-                        fit: BoxFit.cover,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(16),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CourseDetailPage()),
+              );
+            },
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          image: DecorationImage(
+                            image: NetworkImage(course.imageUrl),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          course.category,
-                          style: TextStyle(
-                            color: primaryColor,
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 0.5,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          course.title,
-                          style: TextStyle(
-                            color: textColor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 4),
-                        Row(
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Icon(Icons.schedule, size: 14, color: Colors.grey),
-                            const SizedBox(width: 4),
                             Text(
-                              course.duration,
-                              style: TextStyle(color: mutedColor, fontSize: 12),
+                              course.category,
+                              style: TextStyle(
+                                color: primaryColor,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              course.title,
+                              style: TextStyle(
+                                color: textColor,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 4),
+                            Row(
+                              children: [
+                                const Icon(Icons.schedule, size: 14, color: Colors.grey),
+                                const SizedBox(width: 4),
+                                Text(
+                                  course.duration,
+                                  style: TextStyle(color: mutedColor, fontSize: 12),
+                                ),
+                              ],
                             ),
                           ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        '${(course.progress * 100).toInt()}% Selesai',
-                        style: TextStyle(
-                          color: mutedColor,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      Text(
-                        'Lanjutkan',
-                        style: TextStyle(
-                          color: primaryColor,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 6),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(100),
-                    child: LinearProgressIndicator(
-                      value: course.progress,
-                      backgroundColor: Colors.grey[100],
-                      color: primaryColor,
-                      minHeight: 6,
-                    ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '${(course.progress * 100).toInt()}% Selesai',
+                            style: TextStyle(
+                              color: mutedColor,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            'Lanjutkan',
+                            style: TextStyle(
+                              color: primaryColor,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: LinearProgressIndicator(
+                          value: course.progress,
+                          backgroundColor: Colors.grey[100],
+                          color: primaryColor,
+                          minHeight: 6,
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       );
     } else {
@@ -437,137 +450,149 @@ class _ExplorePageState extends State<ExplorePage> {
             )
           ],
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Image Section
-            Stack(
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(16),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CourseDetailPage()),
+              );
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  height: 160,
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-                    image: DecorationImage(
-                      image: NetworkImage(course.imageUrl),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                if (course.rating > 0)
-                  Positioned(
-                    top: 12,
-                    right: 12,
-                    child: Container(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                // Image Section
+                Stack(
+                  children: [
+                    Container(
+                      height: 160,
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.9),
-                        borderRadius: BorderRadius.circular(4),
+                        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                        image: DecorationImage(
+                          image: NetworkImage(course.imageUrl),
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                      child: Row(
+                    ),
+                    if (course.rating > 0)
+                      Positioned(
+                        top: 12,
+                        right: 12,
+                        child: Container(
+                          padding:
+                              const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.9),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.star, color: Colors.amber, size: 14),
+                              const SizedBox(width: 4),
+                              Text(
+                                course.rating.toString(),
+                                style: TextStyle(
+                                  color: textColor,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                
+                // Content
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Icon(Icons.star, color: Colors.amber, size: 14),
-                          const SizedBox(width: 4),
-                          Text(
-                            course.rating.toString(),
-                            style: TextStyle(
-                              color: textColor,
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: primaryColor.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(4),
                             ),
+                            child: Text(
+                              course.category,
+                              style: TextStyle(
+                                color: primaryColor,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          if (course.duration.isNotEmpty)
+                             Text(
+                              course.duration,
+                              style: TextStyle(color: mutedColor, fontSize: 12),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        course.title,
+                        style: TextStyle(
+                          color: textColor,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        course.author, // HTML description logic can go here, but author is fine
+                        style: TextStyle(color: mutedColor, fontSize: 12),
+                      ),
+                      const SizedBox(height: 16),
+                      
+                      // Footer
+                      Row(
+                        children: [
+                          // Avatar placeholder
+                           Container(
+                            width: 24,
+                            height: 24,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(Icons.person, size: 16, color: Colors.grey[600]),
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            course.author, 
+                            style: TextStyle(color: textColor, fontSize: 12, fontWeight: FontWeight.w500),
+                          ),
+                          const Spacer(),
+                          // Button
+                          ElevatedButton(
+                            onPressed: () {},
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: primaryColor,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                              minimumSize: const Size(0, 32),
+                            ),
+                            child: const Text('Mulai', style: TextStyle(fontSize: 12, color: Colors.white)),
                           ),
                         ],
                       ),
-                    ),
+                    ],
                   ),
+                ),
               ],
             ),
-            
-            // Content
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: primaryColor.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Text(
-                          course.category,
-                          style: TextStyle(
-                            color: primaryColor,
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      if (course.duration.isNotEmpty)
-                         Text(
-                          course.duration,
-                          style: TextStyle(color: mutedColor, fontSize: 12),
-                        ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    course.title,
-                    style: TextStyle(
-                      color: textColor,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    course.author, // HTML description logic can go here, but author is fine
-                    style: TextStyle(color: mutedColor, fontSize: 12),
-                  ),
-                  const SizedBox(height: 16),
-                  
-                  // Footer
-                  Row(
-                    children: [
-                      // Avatar placeholder
-                       Container(
-                        width: 24,
-                        height: 24,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(Icons.person, size: 16, color: Colors.grey[600]),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        course.author, 
-                        style: TextStyle(color: textColor, fontSize: 12, fontWeight: FontWeight.w500),
-                      ),
-                      const Spacer(),
-                      // Button
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: primaryColor,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-                          minimumSize: const Size(0, 32),
-                        ),
-                        child: const Text('Mulai', style: TextStyle(fontSize: 12, color: Colors.white)),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
+          ),
         ),
       );
     }
